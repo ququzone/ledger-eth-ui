@@ -21,8 +21,9 @@ export default function Home() {
   }
 
   async function bucketDeposit() {
-    const provider = new ethers.providers.JsonRpcProvider("https://babel-api.mainnet.iotex.io")
-    const signer = new LedgerSigner(provider, "44'/304'/0'/0/0")
+    const provider = new ethers.providers.JsonRpcProvider("https://babel-api.mainnet.iotex.io");
+    const transport = await createTransport();
+    const signer = new LedgerSigner(transport, provider, "44'/304'/0'/0/0")
 
     const staking = new ethers.Contract(
         "0x04c22afae6a03438b8fed74cb1cf441168df3f12",

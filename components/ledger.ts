@@ -23,24 +23,19 @@ export class LedgerSigner extends ethers.Signer {
     readonly path: string
     readonly _eth: Promise<Eth>;
 
-    constructor(provider?: ethers.providers.Provider, path?: string) {
+    constructor(transport: Transport, provider?: ethers.providers.Provider, path?: string) {
         super();
 
-        ethers.utils.defineReadOnly(this, "path", path);
+        ethers.utils.defineReadOnly(this, "path", path || "44'/60'/0'/0/0");
         ethers.utils.defineReadOnly(this, "provider", provider || null);
 
-        const transport = createTransport();
-
-        ethers.utils.defineReadOnly(this, "_eth", transport.then((transport) => {
-            const eth = new Eth(transport);
-            return eth.getAppConfiguration().then((config) => {
-                return eth;
-            }, (error) => {
-                return Promise.reject(error);
-            });
+        const eth = new Eth(transport);
+        const _eth = eth.getAppConfiguration().then((config) => {
+            return eth;
         }, (error) => {
             return Promise.reject(error);
-        }));
+        });
+        ethers.utils.defineReadOnly(this, "_eth", _eth);
     }
 
     _retry<T = any>(callback: (eth: Eth) => Promise<T>, timeout?: number): Promise<T> {
