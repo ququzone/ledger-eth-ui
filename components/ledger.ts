@@ -26,7 +26,7 @@ export class LedgerSigner extends ethers.Signer {
     constructor(transport: Transport, provider?: ethers.providers.Provider, path?: string) {
         super();
 
-        ethers.utils.defineReadOnly(this, "path", path || "44'/60'/0'/0/0");
+        ethers.utils.defineReadOnly(this, "path", path || "44'/304'/0'/0/0");
         ethers.utils.defineReadOnly(this, "provider", provider || null);
 
         const eth = new Eth(transport);
